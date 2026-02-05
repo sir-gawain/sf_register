@@ -33,7 +33,9 @@ class FeuserCreateController extends FeuserController
 {
     protected string $controller = 'Create';
 
-    protected array $ignoredActions = ['confirmAction', 'refuseAction', 'acceptAction', 'declineAction'];
+    protected array $ignoredActions = [
+        'confirmAction', 'refuseAction', 'acceptAction', 'declineAction',
+        'confirmFormAction', 'refuseFormAction', 'acceptFormAction', 'declineFormAction'];
 
     public function formAction(FrontendUser $user = null): ResponseInterface
     {
@@ -132,6 +134,25 @@ class FeuserCreateController extends FeuserController
         return new HtmlResponse($this->view->render());
     }
 
+    public function confirmFormAction(?FrontendUser $user, ?string $hash): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->confirmAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
+    }
+
     /**
      * Confirm registration process by user
      * Could be followed by acceptance of admin
@@ -188,6 +209,25 @@ class FeuserCreateController extends FeuserController
         return new HtmlResponse($this->view->render());
     }
 
+    public function refuseFormAction(?FrontendUser $user, ?string $hash): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->refuseAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
+    }
+
     /**
      * Refuse registration process by user with removing the user data
      *
@@ -215,6 +255,25 @@ class FeuserCreateController extends FeuserController
         }
 
         return new HtmlResponse($this->view->render());
+    }
+
+    public function acceptFormAction(?FrontendUser $user, ?string $hash): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->acceptAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
     }
 
     /**
@@ -260,6 +319,25 @@ class FeuserCreateController extends FeuserController
         }
 
         return new HtmlResponse($this->view->render());
+    }
+
+    public function declineFormAction(?FrontendUser $user, ?string $hash): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->declineAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
     }
 
     /**

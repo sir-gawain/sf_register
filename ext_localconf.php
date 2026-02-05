@@ -37,11 +37,11 @@ call_user_func(function () {
         'Create',
         [
             \Evoweb\SfRegister\Controller\FeuserCreateController::class =>
-                'form, preview, proxy, save, confirm, refuse, accept, decline, removeImage',
+                'form, preview, proxy, save, confirm, refuse, accept, decline, confirmForm, refuseForm, acceptForm, declineForm, removeImage',
         ],
         [
             \Evoweb\SfRegister\Controller\FeuserCreateController::class =>
-                'form, preview, proxy, save, confirm, refuse, accept, decline, removeImage',
+                'form, preview, proxy, save, confirm, refuse, accept, decline, confirmForm, refuseForm, acceptForm, declineForm, removeImage',
         ]
     );
 
@@ -50,11 +50,11 @@ call_user_func(function () {
         'Edit',
         [
             \Evoweb\SfRegister\Controller\FeuserEditController::class =>
-                'form, preview, proxy, save, confirm, accept, removeImage',
+                'form, preview, proxy, save, confirm, accept, confirmForm, acceptForm, removeImage',
         ],
         [
             \Evoweb\SfRegister\Controller\FeuserEditController::class =>
-                'form, preview, proxy, save, confirm, accept, removeImage',
+                'form, preview, proxy, save, confirm, accept, confirmForm, acceptForm, removeImage',
         ]
     );
 

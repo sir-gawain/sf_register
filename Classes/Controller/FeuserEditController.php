@@ -33,7 +33,7 @@ class FeuserEditController extends FeuserController
 {
     protected string $controller = 'Edit';
 
-    protected array $ignoredActions = ['confirmAction', 'acceptAction'];
+    protected array $ignoredActions = ['confirmAction', 'acceptAction', 'confirmFormAction', 'acceptFormAction'];
 
     public function formAction(FrontendUser $user = null): ResponseInterface
     {
@@ -148,6 +148,25 @@ class FeuserEditController extends FeuserController
         return $response;
     }
 
+    public function confirmFormAction(FrontendUser $user = null, string $hash = null): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->confirmAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
+    }
+
     public function confirmAction(FrontendUser $user = null, string $hash = null): ResponseInterface
     {
         $user = $this->determineFrontendUser($user, $hash);
@@ -192,6 +211,25 @@ class FeuserEditController extends FeuserController
         }
 
         return new HtmlResponse($this->view->render());
+    }
+
+    public function acceptFormAction(FrontendUser $user = null, string $hash = null): ResponseInterface
+    {
+        // Microsoft Safelinks is said to call the page by HEAD command for verification.
+        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+            return $this->acceptAction($user, $hash);
+        }
+
+        $user = $this->determineFrontendUser($user, $hash);
+
+        if ( ! ($user instanceof FrontendUser)) {
+            $this->view->assign('userNotFound', 1);
+        } else {
+            $this->view->assign('user', $user);
+        }
+
+        return $this->htmlResponse();
     }
 
     public function acceptAction(FrontendUser $user = null, string $hash = null): ResponseInterface
