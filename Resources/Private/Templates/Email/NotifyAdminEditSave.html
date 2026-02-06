@@ -9,7 +9,9 @@
 	<br>
 	<f:format.raw><f:translate id="email_admin_activate_message" arguments="{0: user.username}"/></f:format.raw><br>
 	<br>
-	<register:link.action arguments="{user: user.uid}" action="accept" controller="FeuserEdit" absolute="true">
+    <f:variable name="form" value="{f:if(condition: '{settings.enableConfirmationButtonForEmailLinks} == true', then: 'Form')}" />
+
+	<register:link.action arguments="{user: user.uid}" action="accept{form}" controller="FeuserEdit" absolute="true">
 		<f:translate id="email_admin_activate_link"/>
 	</register:link.action>
 </f:section>

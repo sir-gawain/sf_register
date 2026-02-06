@@ -141,6 +141,32 @@ plugin.tx_sfregister.settings.*
 
         Adapter for Captcha-Extension sr_freecap
 
+    ..  _enableConfirmationButtonForEmailLinks:
+
+    ..  confval:: enableConfirmationButtonForEmailLinks
+        :type: boolean
+        :default: 0
+
+         If set to true, email links will not directly manipulate the state of an user subscription,
+         but check for the HTTP method first. In case of HEAD method, a confirmation page with a button
+         will be shown. This should prevent double click issues by MicroSoft's SafeLinks feature. In case
+         of other methods, the default action gets called immediately.
+
+    ..  _forceConfirmationButtonForEmailLinks:
+
+    ..  confval:: forceConfirmationButtonForEmailLinks
+        :type: boolean
+        :default: 0
+
+         If set to true, email links will not directly manipulate the state of an user subscription,
+         but check for the HTTP method first. In case of HEAD method, a confirmation page with a button
+         will be shown. This should prevent double click issues by MicroSoft's SafeLinks feature. In case
+         of other methods, the default action gets called immediately.
+
+         If `enableConfirmationButtonForEmailLinks` is true and this setting is set to true,
+         the confirmation page is always shown regardless of the HTTP method. This can help against
+         the link preview features of some email clients.
+
 Persistence
 ===========
 
