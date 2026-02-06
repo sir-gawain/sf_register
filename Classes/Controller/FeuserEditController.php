@@ -153,17 +153,18 @@ class FeuserEditController extends FeuserController
 
     public function confirmFormAction(FrontendUser $user = null, string $hash = null): ResponseInterface
     {
-        // Microsoft Safelinks is said to call the page by HEAD command for verification.
-        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
-        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
-            return $this->confirmAction($user, $hash);
-        }
-
         $user = $this->frontendUserService->determineFrontendUser($this->request, $user, $hash);
 
         if ( ! ($user instanceof FrontendUser)) {
             $this->view->assign('userNotFound', 1);
         } else {
+            // Microsoft Safelinks is said to call the page by HEAD command for verification.
+            // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+            if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+                $hash = GeneralUtility::hmac('confirm::'.$user->getUid());
+                return $this->redirect('confirm', null, null, ['user' => $user, 'hash' => $hash]);
+            }
+
             $this->view->assign('user', $user);
         }
 
@@ -230,17 +231,18 @@ class FeuserEditController extends FeuserController
 
     public function acceptFormAction(FrontendUser $user = null, string $hash = null): ResponseInterface
     {
-        // Microsoft Safelinks is said to call the page by HEAD command for verification.
-        // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
-        if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
-            return $this->acceptAction($user, $hash);
-        }
-
         $user = $this->frontendUserService->determineFrontendUser($this->request, $user, $hash);
 
         if ( ! ($user instanceof FrontendUser)) {
             $this->view->assign('userNotFound', 1);
         } else {
+            // Microsoft Safelinks is said to call the page by HEAD command for verification.
+            // So: if not HEAD, proceed normally. Otherwise show an intermediate page.
+            if($this->request->getMethod() !== 'HEAD' && !$this->settings['forceConfirmationButtonForEmailLinks']) {
+                $hash = GeneralUtility::hmac('accept::'.$user->getUid());
+                return $this->redirect('accept', null, null, ['user' => $user, 'hash' => $hash]);
+            }
+
             $this->view->assign('user', $user);
         }
 
